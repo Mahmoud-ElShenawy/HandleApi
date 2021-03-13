@@ -96,6 +96,7 @@ class ApiProvider {
 
 Response handleResponse(Response response) {
   final int statusCode = response.statusCode;
+  print('Status Code: $statusCode');
   if (statusCode == 200) {
     return response;
   } else {

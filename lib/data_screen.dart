@@ -9,18 +9,18 @@ class DataScreen extends StatelessWidget {
       body: Consumer(
         builder: (context, watch, child) {
           final data = watch(dataProvider);
-          return data.map(
+          return data.when(
             data: (provider) => Center(
               child: ListView.separated(
-                itemCount: provider.value.length,
+                itemCount: provider.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(provider.value[index].title.toString()),
-                      Text(provider.value[index].id.toString()),
-                      Text(provider.value[index].userId.toString()),
-                      Text(provider.value[index].body),
+                      Text(provider[index].title.toString()),
+                      Text(provider[index].id.toString()),
+                      Text(provider[index].userId.toString()),
+                      Text(provider[index].body),
                     ],
                   );
                 },
@@ -34,11 +34,12 @@ class DataScreen extends StatelessWidget {
                 },
               ),
             ),
-            loading: (_) => Center(child: CircularProgressIndicator()),
-            error: (e) => Center(
+            loading: () => Center(
+              child: CircularProgressIndicator(),
+            ),
+            error: (error, stack) => Center(
               child: Text(
-                e.error.toString(),
-                style: TextStyle(color: Colors.red),
+                error.toString(),
               ),
             ),
           );
