@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:utils_test/toast.dart';
 
 part 'network_exceptions.freezed.dart';
 
@@ -49,60 +50,77 @@ abstract class NetworkExceptions with _$NetworkExceptions {
           switch (error.type) {
             case DioErrorType.CANCEL:
               networkExceptions = NetworkExceptions.requestCancelled();
+              toast(message: NetworkExceptions.getErrorMessage(networkExceptions));
               break;
             case DioErrorType.CONNECT_TIMEOUT:
               networkExceptions = NetworkExceptions.requestTimeout();
+              toast(message: NetworkExceptions.getErrorMessage(networkExceptions));
               break;
             case DioErrorType.DEFAULT:
               networkExceptions = NetworkExceptions.noInternetConnection();
+              toast(message: NetworkExceptions.getErrorMessage(networkExceptions));
               break;
             case DioErrorType.RECEIVE_TIMEOUT:
               networkExceptions = NetworkExceptions.sendTimeout();
+              toast(message: NetworkExceptions.getErrorMessage(networkExceptions));
               break;
             case DioErrorType.RESPONSE:
               switch (error.response.statusCode) {
                 case 400:
                   networkExceptions = NetworkExceptions.unauthorisedRequest();
+                  toast(message: NetworkExceptions.getErrorMessage(networkExceptions));
                   break;
                 case 401:
                   networkExceptions = NetworkExceptions.unauthorisedRequest();
+                  toast(message: NetworkExceptions.getErrorMessage(networkExceptions));
                   break;
                 case 403:
                   networkExceptions = NetworkExceptions.unauthorisedRequest();
+                  toast(message: NetworkExceptions.getErrorMessage(networkExceptions));
                   break;
                 case 404:
                   networkExceptions = NetworkExceptions.notFound("Not found");
+                  toast(message: NetworkExceptions.getErrorMessage(networkExceptions));
                   break;
                 case 409:
                   networkExceptions = NetworkExceptions.conflict();
+                  toast(message: NetworkExceptions.getErrorMessage(networkExceptions));
                   break;
                 case 408:
                   networkExceptions = NetworkExceptions.requestTimeout();
+                  toast(message: NetworkExceptions.getErrorMessage(networkExceptions));
                   break;
                 case 500:
                   networkExceptions = NetworkExceptions.internalServerError();
+                  toast(message: NetworkExceptions.getErrorMessage(networkExceptions));
                   break;
                 case 503:
                   networkExceptions = NetworkExceptions.serviceUnavailable();
+                  toast(message: NetworkExceptions.getErrorMessage(networkExceptions));
                   break;
                 default:
                   var responseCode = error.response.statusCode;
                   networkExceptions = NetworkExceptions.defaultError(
                     "Received invalid status code: $responseCode",
                   );
+                  toast(message: NetworkExceptions.getErrorMessage(networkExceptions));
               }
               break;
             case DioErrorType.SEND_TIMEOUT:
               networkExceptions = NetworkExceptions.sendTimeout();
+              toast(message: NetworkExceptions.getErrorMessage(networkExceptions));
               break;
           }
         } else if (error is SocketException) {
           networkExceptions = NetworkExceptions.noInternetConnection();
+          toast(message: NetworkExceptions.getErrorMessage(networkExceptions));
         } else {
           networkExceptions = NetworkExceptions.unexpectedError();
+          toast(message: NetworkExceptions.getErrorMessage(networkExceptions));
         }
         return networkExceptions;
       } on FormatException catch (e) {
+        toast(message: NetworkExceptions.getErrorMessage(e));
         return NetworkExceptions.formatException();
       } catch (_) {
         return NetworkExceptions.unexpectedError();
