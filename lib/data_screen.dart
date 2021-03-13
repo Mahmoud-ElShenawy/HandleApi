@@ -10,17 +10,17 @@ class DataScreen extends StatelessWidget {
         builder: (context, watch, child) {
           final data = watch(dataProvider);
           return data.when(
-            data: (provider) => Center(
+            data: (data) => Center(
               child: ListView.separated(
-                itemCount: provider.length,
+                itemCount: data.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(provider[index].title.toString()),
-                      Text(provider[index].id.toString()),
-                      Text(provider[index].userId.toString()),
-                      Text(provider[index].body),
+                      Text(data[index].title.toString()),
+                      Text(data[index].id.toString()),
+                      Text(data[index].userId.toString()),
+                      Text(data[index].body),
                     ],
                   );
                 },
@@ -39,7 +39,7 @@ class DataScreen extends StatelessWidget {
             ),
             error: (error, stack) => Center(
               child: Text(
-                error.toString(),
+                'Error',
               ),
             ),
           );

@@ -120,7 +120,6 @@ abstract class NetworkExceptions with _$NetworkExceptions {
         }
         return networkExceptions;
       } on FormatException catch (e) {
-        toast(message: NetworkExceptions.getErrorMessage(e));
         return NetworkExceptions.formatException();
       } catch (_) {
         return NetworkExceptions.unexpectedError();

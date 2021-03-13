@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:connectivity/connectivity.dart';
@@ -26,7 +25,11 @@ class ApiProvider {
   };
 
   ///POST Method
-  Future<Response> post({@required String apiRoute, @required var data}) async {
+  Future<Response> post(
+      {@required String apiRoute,
+      @required var data,
+      @required void successResponse(dynamic response),
+      @required void errorResponse(dynamic response)}) async {
     var response;
     try {
       if (kDebugMode) {
@@ -50,17 +53,23 @@ class ApiProvider {
         ),
       ));
       response = await _dio.post(apiRoute, data: data);
+      successResponse(response);
     } on SocketException catch (e) {
+      errorResponse(response);
       throw SocketException(e.toString());
     } catch (e) {
       NetworkExceptions.getErrorException(e);
+      errorResponse(response);
       throw e;
     }
     return handleResponse(response);
   }
 
   ///GET Method
-  Future<Response> get({@required String apiRoute}) async {
+  Future<Response> get(
+      {@required String apiRoute,
+      @required void successResponse(dynamic response),
+      @required void errorResponse(NetworkExceptions error)}) async {
     var response;
     try {
       if (kDebugMode) {
@@ -84,10 +93,13 @@ class ApiProvider {
         ),
       ));
       response = await _dio.get(apiRoute);
+      successResponse(response);
     } on SocketException catch (e) {
+      errorResponse(response);
       throw SocketException(e.toString());
     } catch (e) {
       NetworkExceptions.getErrorException(e);
+      errorResponse(response);
       throw e;
     }
     return handleResponse(response);
